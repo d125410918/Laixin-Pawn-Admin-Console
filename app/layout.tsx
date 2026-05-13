@@ -1,14 +1,18 @@
-import type { Metadata } from "next";
 import "./globals.css";
+import { ReactNode } from "react";
 
-export const metadata: Metadata = {
-  title: "來新當鋪客戶審核後台",
-  description: "Laixin Pawn Admin Console"
+export const metadata = {
+  title: "初審申請表",
+  description: "Pawnshop Application"
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return (
-    <html lang="zh-Hant-TW">
+    <html lang="zh-Hant">
       <body>{children}</body>
     </html>
   );
