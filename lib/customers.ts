@@ -42,28 +42,30 @@ function mapCustomer(row: Record<string, unknown>): Customer {
   };
 }
 
-const customerSelect = `
-  id,
-  name,
-  national_id,
-  city,
-  district,
-  income_type,
-  income_amount,
-  income_label,
-  collateral,
-  funding_need,
-  status,
-  selfie_url,
-  id_card_front_url,
-  id_card_back_url,
-  created_at,
-  updated_at
-`;
-
 export async function listCustomers() {
   const sql = getSql();
-  const rows = await sql(customerSelect + " from customers order by created_at desc");
+  const rows = await sql`
+    select
+      id,
+      name,
+      national_id,
+      city,
+      district,
+      income_type,
+      income_amount,
+      income_label,
+      collateral,
+      funding_need,
+      status,
+      selfie_url,
+      id_card_front_url,
+      id_card_back_url,
+      created_at,
+      updated_at
+    from customers
+    order by created_at desc
+  `;
+
   const resultRows = rows as Record<string, unknown>[];
   return resultRows.map((row) => mapCustomer(row));
 }
