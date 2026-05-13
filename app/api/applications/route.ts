@@ -8,6 +8,12 @@ function text(value: unknown) {
   return String(value).trim();
 }
 
+function numberOrZero(value: unknown) {
+  const number = Number(value ?? 0);
+  if (!Number.isFinite(number)) return 0;
+  return Math.max(0, Math.trunc(number));
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json().catch(() => null) as Record<string, unknown> | null;
@@ -21,7 +27,7 @@ export async function POST(request: NextRequest) {
     const city = text(body.city);
     const district = text(body.district) || null;
     const incomeType = text(body.incomeType) || "monthly";
-    const incomeAmount = Number(body.incomeAmount ?? 0);
+    const incomeAmount = numberOrZero(body.incomeAmount);
     const incomeLabel = text(body.incomeLabel);
     const collateral = text(body.collateral);
     const fundingNeed = text(body.fundingNeed);
