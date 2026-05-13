@@ -21,18 +21,6 @@ function formatDateTime(value: string) {
   }).format(date);
 }
 
-function compactDetails(customer: Customer) {
-  const parts = [
-    customer.phone ? `手機 ${customer.phone}` : "",
-    customer.lineId ? `LINE ${customer.lineId}` : "",
-    customer.jobType ? `工作 ${customer.jobType}` : "",
-    customer.workYears ? `年資 ${customer.workYears}` : "",
-    customer.hasPayrollOrLaborInsurance ? `薪轉／勞保 ${customer.hasPayrollOrLaborInsurance}` : ""
-  ].filter(Boolean);
-
-  return parts.join("｜");
-}
-
 export default function AdminCustomerTable() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
@@ -151,7 +139,7 @@ export default function AdminCustomerTable() {
           <thead>
             <tr>
               <th>姓名 / 身分證</th>
-              <th>縣市</th>
+              <th>縣市 / 區域</th>
               <th>月入 / 日薪</th>
               <th>當品</th>
               <th>資金需求</th>
@@ -165,10 +153,13 @@ export default function AdminCustomerTable() {
                 <td className="name-cell">
                   <strong>{customer.name}</strong>
                   <span>{customer.nationalId}</span>
-                  {compactDetails(customer) ? <small>{compactDetails(customer)}</small> : null}
                 </td>
                 <td>{customer.city}{customer.area}</td>
-                <td className="money-text">{customer.incomeText}</td>
+                <td className="money-text">
+                  <strong>{customer.incomeText || "未填寫"}</strong>
+                  {customer.jobType ? <small className="block-muted">類型：{customer.jobType}</small> : null}
+                  {customer.workYears ? <small className="block-muted">數字：{customer.workYears}</small> : null}
+                </td>
                 <td>
                   <div>{customer.collateral}</div>
                   <div className="image-links inline-links">
@@ -177,10 +168,7 @@ export default function AdminCustomerTable() {
                     {customer.idCardBackUrl ? <a href={customer.idCardBackUrl} target="_blank" rel="noreferrer">身分證反面</a> : null}
                   </div>
                 </td>
-                <td>
-                  <strong>{customer.fundingNeedText}</strong>
-                  {customer.fundingPurpose ? <small className="block-muted">用途：{customer.fundingPurpose}</small> : null}
-                </td>
+                <td><strong>{customer.fundingNeedText}</strong></td>
                 <td className="time-text">{formatDateTime(customer.createdAt)}</td>
                 <td>
                   <select
