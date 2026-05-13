@@ -13,48 +13,27 @@ function isoOrNow(value: unknown) {
   return date.toISOString();
 }
 
-function numberText(value: unknown) {
-  const number = Number(value ?? 0);
-  if (!Number.isFinite(number) || number <= 0) return "";
-  return new Intl.NumberFormat("zh-TW").format(number);
-}
-
 function mapCustomer(row: Record<string, unknown>): Customer {
-  const incomeRange = String(row.income_range ?? "").trim();
-  const incomeType = String(row.income_type ?? "monthly");
-  const incomeAmount = Number(row.income_amount ?? 0);
-  const dailyIncomeAmount = Number(row.daily_income_amount ?? 0);
-  const incomeText = incomeRange
-    ? `月入 ${incomeRange}`
-    : incomeType === "daily"
-      ? `日薪 ${numberText(dailyIncomeAmount || incomeAmount)}`
-      : `月入 ${numberText(incomeAmount)}`;
-
-  const fundingAmountWan = String(row.funding_amount_wan ?? "").trim();
-  const fundingNeedText = fundingAmountWan
-    ? `${fundingAmountWan}萬`
-    : numberText(row.funding_need);
-
   return {
     id: String(row.id),
     name: String(row.name ?? ""),
     nationalId: String(row.national_id ?? ""),
-    birthDate: stringOrNull(row.birth_date),
-    phone: stringOrNull(row.phone),
-    lineId: stringOrNull(row.line_id),
+    birthDate: null,
+    phone: null,
+    lineId: null,
     city: String(row.city ?? ""),
-    area: String(row.area ?? ""),
-    incomeText,
-    collateral: String(row.pawn_item ?? row.collateral ?? ""),
-    fundingNeedText,
+    area: String(row.district ?? ""),
+    incomeText: String(row.income_label ?? ""),
+    collateral: String(row.collateral ?? ""),
+    fundingNeedText: String(row.funding_need ?? ""),
     status: row.status === "approved" ? "approved" : "pending",
-    jobType: stringOrNull(row.job_type),
-    workYears: stringOrNull(row.work_years),
-    hasPayrollOrLaborInsurance: stringOrNull(row.has_payroll_or_labor_insurance),
-    fundingPurpose: stringOrNull(row.funding_purpose),
-    emergencyName: stringOrNull(row.emergency_name),
-    emergencyPhone: stringOrNull(row.emergency_phone),
-    emergencyRelation: stringOrNull(row.emergency_relation),
+    jobType: String(row.income_type ?? ""),
+    workYears: String(row.income_amount ?? ""),
+    hasPayrollOrLaborInsurance: null,
+    fundingPurpose: null,
+    emergencyName: null,
+    emergencyPhone: null,
+    emergencyRelation: null,
     selfieUrl: stringOrNull(row.selfie_url),
     idCardFrontUrl: stringOrNull(row.id_card_front_url),
     idCardBackUrl: stringOrNull(row.id_card_back_url),
@@ -63,43 +42,28 @@ function mapCustomer(row: Record<string, unknown>): Customer {
   };
 }
 
+const customerSelect = `
+  id,
+  name,
+  national_id,
+  city,
+  district,
+  income_type,
+  income_amount,
+  income_label,
+  collateral,
+  funding_need,
+  status,
+  selfie_url,
+  id_card_front_url,
+  id_card_back_url,
+  created_at,
+  updated_at
+`;
+
 export async function listCustomers() {
   const sql = getSql();
-  const rows = await sql`
-    select
-      id,
-      name,
-      national_id,
-      birth_date,
-      phone,
-      line_id,
-      city,
-      area,
-      job_type,
-      work_years,
-      income_range,
-      income_type,
-      income_amount,
-      daily_income_amount,
-      has_payroll_or_labor_insurance,
-      funding_amount_wan,
-      funding_need,
-      funding_purpose,
-      pawn_item,
-      collateral,
-      emergency_name,
-      emergency_phone,
-      emergency_relation,
-      status,
-      selfie_url,
-      id_card_front_url,
-      id_card_back_url,
-      created_at,
-      updated_at
-    from customers
-    order by created_at desc
-  `;
-
+  const rows = await sql(customerSelect + " from customers order by created_at desc");
   const resultRows = rows as Record<string, unknown>[];
   return resultRows.map((row) => mapCustomer(row));
 }
@@ -108,33 +72,19 @@ export async function updateCustomerStatus(id: string, status: CustomerStatus) {
   const sql = getSql();
   const rows = await sql`
     update customers
-    set status = ${status},
-        updated_at = now()
+    set status = ${status}, updated_at = now()
     where id = ${id}
     returning
       id,
       name,
       national_id,
-      birth_date,
-      phone,
-      line_id,
       city,
-      area,
-      job_type,
-      work_years,
-      income_range,
+      district,
       income_type,
       income_amount,
-      daily_income_amount,
-      has_payroll_or_labor_insurance,
-      funding_amount_wan,
-      funding_need,
-      funding_purpose,
-      pawn_item,
+      income_label,
       collateral,
-      emergency_name,
-      emergency_phone,
-      emergency_relation,
+      funding_need,
       status,
       selfie_url,
       id_card_front_url,
