@@ -83,63 +83,129 @@ function mapCustomer(row: CustomerRow): Customer {
   };
 }
 
-export async function listCustomers() {
+async function hasCustomerColumn(columnName: string) {
   const sql = getSql();
 
   const rows = await sql`
-    SELECT
-      id,
-      name,
-      national_id,
-      phone,
-      city,
-      district,
-      income_type,
-      income_amount,
-      income_label,
-      collateral,
-      funding_need,
-      status,
-      selfie_url,
-      id_card_front_url,
-      id_card_back_url,
-      created_at,
-      updated_at
-    FROM customers
-    ORDER BY created_at DESC
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'customers'
+      AND column_name = ${columnName}
+    LIMIT 1
   `;
+
+  return rows.length > 0;
+}
+
+export async function listCustomers() {
+  const sql = getSql();
+  const hasPhone = await hasCustomerColumn("phone");
+
+  const rows = hasPhone
+    ? await sql`
+        SELECT
+          id,
+          name,
+          national_id,
+          phone,
+          city,
+          district,
+          income_type,
+          income_amount,
+          income_label,
+          collateral,
+          funding_need,
+          status,
+          selfie_url,
+          id_card_front_url,
+          id_card_back_url,
+          created_at,
+          updated_at
+        FROM customers
+        ORDER BY created_at DESC
+      `
+    : await sql`
+        SELECT
+          id,
+          name,
+          national_id,
+          NULL AS phone,
+          city,
+          district,
+          income_type,
+          income_amount,
+          income_label,
+          collateral,
+          funding_need,
+          status,
+          selfie_url,
+          id_card_front_url,
+          id_card_back_url,
+          created_at,
+          updated_at
+        FROM customers
+        ORDER BY created_at DESC
+      `;
 
   return (rows as CustomerRow[]).map(mapCustomer);
 }
 
 export async function updateCustomerStatus(id: string, status: CustomerStatus) {
   const sql = getSql();
+  const hasPhone = await hasCustomerColumn("phone");
 
-  const rows = await sql`
-    UPDATE customers
-    SET
-      status = ${status},
-      updated_at = NOW()
-    WHERE id::text = ${id}
-    RETURNING
-      id,
-      name,
-      national_id,
-      phone,
-      city,
-      district,
-      income_type,
-      income_amount,
-      income_label,
-      collateral,
-      funding_need,
-      status,
-      selfie_url,
-      id_card_front_url,
-      id_card_back_url,
-      created_at,
-      updated_at
-  `;
+  const rows = hasPhone
+    ? await sql`
+        UPDATE customers
+        SET
+          status = ${status},
+          updated_at = NOW()
+        WHERE id::text = ${id}
+        RETURNING
+          id,
+          name,
+          national_id,
+          phone,
+          city,
+          district,
+          income_type,
+          income_amount,
+          income_label,
+          collateral,
+          funding_need,
+          status,
+          selfie_url,
+          id_card_front_url,
+          id_card_back_url,
+          created_at,
+          updated_at
+      `
+    : await sql`
+        UPDATE customers
+        SET
+          status = ${status},
+          updated_at = NOW()
+        WHERE id::text = ${id}
+        RETURNING
+          id,
+          name,
+          national_id,
+          NULL AS phone,
+          city,
+          district,
+          income_type,
+          income_amount,
+          income_label,
+          collateral,
+          funding_need,
+          status,
+          selfie_url,
+          id_card_front_url,
+          id_card_back_url,
+          created_at,
+          updated_at
+      `;
 
   const resultRows = rows as CustomerRow[];
 
