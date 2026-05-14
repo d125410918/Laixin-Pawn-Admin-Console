@@ -94,7 +94,7 @@ a {
 .customer-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 1040px;
+  min-width: 1160px;
 }
 
 .customer-table th,
@@ -162,6 +162,19 @@ a {
   background: #ffffff;
   color: #162033;
   outline: none;
+  font-weight: 700;
+}
+
+.status-select-pending {
+  border-color: #fecdca;
+  background: #fffbfa;
+  color: #b42318;
+}
+
+.status-select-approved {
+  border-color: #abefc6;
+  background: #f6fef9;
+  color: #067647;
 }
 
 .status-select:disabled {
