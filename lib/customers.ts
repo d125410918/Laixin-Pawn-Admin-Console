@@ -5,6 +5,7 @@ type CustomerRow = {
   id: unknown;
   name: unknown;
   national_id: unknown;
+  phone: unknown;
   city: unknown;
   district: unknown;
   income_type: unknown;
@@ -65,6 +66,7 @@ function mapCustomer(row: CustomerRow): Customer {
     id: String(row.id),
     name: stringOrNull(row.name),
     nationalId: stringOrNull(row.national_id),
+    phone: stringOrNull(row.phone),
     city: stringOrNull(row.city),
     district: stringOrNull(row.district),
     incomeType: stringOrNull(row.income_type),
@@ -89,6 +91,7 @@ export async function listCustomers() {
       id,
       name,
       national_id,
+      phone,
       city,
       district,
       income_type,
@@ -122,6 +125,7 @@ export async function updateCustomerStatus(id: string, status: CustomerStatus) {
       id,
       name,
       national_id,
+      phone,
       city,
       district,
       income_type,
