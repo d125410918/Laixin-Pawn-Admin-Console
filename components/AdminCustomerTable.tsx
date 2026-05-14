@@ -46,6 +46,66 @@ function formatDateTime(value: string | null) {
   }).format(date);
 }
 
+function parseBirthDate(value: string | null | undefined) {
+  if (!value) {
+    return null;
+  }
+
+  const dateText = String(value).trim();
+
+  if (/^\d{8}$/.test(dateText)) {
+    const year = Number(dateText.slice(0, 4));
+    const month = Number(dateText.slice(4, 6));
+    const day = Number(dateText.slice(6, 8));
+    const date = new Date(year, month - 1, day);
+
+    if (
+      date.getFullYear() === year &&
+      date.getMonth() === month - 1 &&
+      date.getDate() === day
+    ) {
+      return date;
+    }
+
+    return null;
+  }
+
+  const date = new Date(dateText);
+
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+
+  return date;
+}
+
+function formatAgeInYearsAndMonths(value: string | null | undefined) {
+  const birthDate = parseBirthDate(value);
+
+  if (!birthDate) {
+    return "";
+  }
+
+  const today = new Date();
+  let years = today.getFullYear() - birthDate.getFullYear();
+  let months = today.getMonth() - birthDate.getMonth();
+
+  if (today.getDate() < birthDate.getDate()) {
+    months -= 1;
+  }
+
+  if (months < 0) {
+    years -= 1;
+    months += 12;
+  }
+
+  if (years < 0) {
+    return "";
+  }
+
+  return `（${years}歲${months}個月）`;
+}
+
 function formatIncome(customer: Customer) {
   if (customer.incomeLabel) {
     return customer.incomeLabel;
@@ -260,7 +320,10 @@ export default function AdminCustomerTable() {
               {customers.map((customer) => (
                 <tr key={customer.id}>
                   <td>
-                    <span className="primary-text">{text(customer.name)}</span>
+                    <span className="primary-text">
+                      {text(customer.name)}
+                      {formatAgeInYearsAndMonths(customer.birthDate)}
+                    </span>
                     <span className="muted-text">{text(customer.nationalId)}</span>
                     <div className="time-text">送出：{formatDateTime(customer.createdAt)}</div>
                   </td>
