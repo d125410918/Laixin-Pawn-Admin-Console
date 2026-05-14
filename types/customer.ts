@@ -3,6 +3,7 @@ export type CustomerStatus = "pending" | "approved";
 export type Customer = {
   id: string;
   name: string | null;
+  birthDate: string | null;
   nationalId: string | null;
   phone: string | null;
   city: string | null;
