@@ -247,6 +247,7 @@ export default function AdminCustomerTable() {
             <thead>
               <tr>
                 <th>姓名與身分證</th>
+                <th>手機號碼</th>
                 <th>縣市與區域</th>
                 <th>月入或日薪</th>
                 <th>當品</th>
@@ -262,6 +263,10 @@ export default function AdminCustomerTable() {
                     <span className="primary-text">{text(customer.name)}</span>
                     <span className="muted-text">{text(customer.nationalId)}</span>
                     <div className="time-text">送出：{formatDateTime(customer.createdAt)}</div>
+                  </td>
+
+                  <td>
+                    <span className="primary-text">{text(customer.phone)}</span>
                   </td>
 
                   <td>
@@ -285,7 +290,7 @@ export default function AdminCustomerTable() {
 
                   <td>
                     <select
-                      className="status-select"
+                      className={`status-select status-select-${customer.status}`}
                       value={customer.status}
                       disabled={workingId === customer.id}
                       onChange={(event) => void changeStatus(customer, event.target.value)}
