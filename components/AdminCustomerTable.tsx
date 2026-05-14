@@ -327,6 +327,7 @@ export default function AdminCustomerTable() {
 
                   <td>
                     <span className="primary-text">{text(customer.phone)}</span>
+                    <span className="muted-text">LINE ID：{text(customer.lineId)}</span>
                   </td>
 
                   <td>
