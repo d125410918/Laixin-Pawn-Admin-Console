@@ -306,7 +306,7 @@ export default function AdminCustomerTable() {
                 <th>姓名與身分證</th>
                 <th>手機號碼</th>
                 <th>縣市與區域</th>
-                <th>月入或日薪</th>
+                <th>月入</th>
                 <th>當品/自拍/身分證</th>
                 <th>資金需求</th>
                 <th>審核狀態</th>
@@ -337,7 +337,7 @@ export default function AdminCustomerTable() {
 
                   <td>
                     <span className="primary-text">{formatIncome(customer)}</span>
-                    <span className="muted-text">{text(customer.incomeType)}</span>
+                    <span className="muted-text">職業：{text(customer.jobType)}</span>
                   </td>
 
                   <td>
@@ -347,6 +347,7 @@ export default function AdminCustomerTable() {
 
                   <td>
                     <span className="primary-text">{text(customer.fundingNeed)}</span>
+                    <span className="muted-text">用途：{text(customer.fundingPurpose)}</span>
                   </td>
 
                   <td>
