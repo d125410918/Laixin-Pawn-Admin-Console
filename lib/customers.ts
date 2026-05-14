@@ -4,6 +4,7 @@ import type { Customer, CustomerStatus } from "@/types/customer";
 type CustomerRow = {
   id: unknown;
   name: unknown;
+  birth_date: unknown;
   national_id: unknown;
   phone: unknown;
   city: unknown;
@@ -65,6 +66,7 @@ function mapCustomer(row: CustomerRow): Customer {
   return {
     id: String(row.id),
     name: stringOrNull(row.name),
+    birthDate: stringOrNull(row.birth_date),
     nationalId: stringOrNull(row.national_id),
     phone: stringOrNull(row.phone),
     city: stringOrNull(row.city),
@@ -107,6 +109,7 @@ export async function listCustomers() {
         SELECT
           id,
           name,
+          birth_date,
           national_id,
           phone,
           city,
@@ -129,6 +132,7 @@ export async function listCustomers() {
         SELECT
           id,
           name,
+          birth_date,
           national_id,
           NULL AS phone,
           city,
@@ -165,6 +169,7 @@ export async function updateCustomerStatus(id: string, status: CustomerStatus) {
         RETURNING
           id,
           name,
+          birth_date,
           national_id,
           phone,
           city,
@@ -190,6 +195,7 @@ export async function updateCustomerStatus(id: string, status: CustomerStatus) {
         RETURNING
           id,
           name,
+          birth_date,
           national_id,
           NULL AS phone,
           city,
