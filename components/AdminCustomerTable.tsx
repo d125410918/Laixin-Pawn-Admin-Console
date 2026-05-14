@@ -79,7 +79,7 @@ function parseBirthDate(value: string | null | undefined) {
   return date;
 }
 
-function formatAgeInYearsAndMonths(value: string | null | undefined) {
+function formatAgeInYears(value: string | null | undefined) {
   const birthDate = parseBirthDate(value);
 
   if (!birthDate) {
@@ -88,22 +88,19 @@ function formatAgeInYearsAndMonths(value: string | null | undefined) {
 
   const today = new Date();
   let years = today.getFullYear() - birthDate.getFullYear();
-  let months = today.getMonth() - birthDate.getMonth();
+  const hasBirthdayPassedThisYear =
+    today.getMonth() > birthDate.getMonth() ||
+    (today.getMonth() === birthDate.getMonth() && today.getDate() >= birthDate.getDate());
 
-  if (today.getDate() < birthDate.getDate()) {
-    months -= 1;
-  }
-
-  if (months < 0) {
+  if (!hasBirthdayPassedThisYear) {
     years -= 1;
-    months += 12;
   }
 
   if (years < 0) {
     return "";
   }
 
-  return `（${years}歲${months}個月）`;
+  return `（${years}歲）`;
 }
 
 function formatIncome(customer: Customer) {
@@ -322,7 +319,7 @@ export default function AdminCustomerTable() {
                   <td>
                     <span className="primary-text">
                       {text(customer.name)}
-                      {formatAgeInYearsAndMonths(customer.birthDate)}
+                      {formatAgeInYears(customer.birthDate)}
                     </span>
                     <span className="muted-text">{text(customer.nationalId)}</span>
                     <div className="time-text">送出：{formatDateTime(customer.createdAt)}</div>
