@@ -250,7 +250,7 @@ export default function AdminCustomerTable() {
                 <th>手機號碼</th>
                 <th>縣市與區域</th>
                 <th>月入或日薪</th>
-                <th>當品</th>
+                <th>當品/自拍/身分證</th>
                 <th>資金需求</th>
                 <th>審核狀態</th>
               </tr>
