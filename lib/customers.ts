@@ -97,7 +97,7 @@ async function hasCustomerColumn(columnName: string) {
     LIMIT 1
   `;
 
-  return rows.length > 0;
+  return (rows as unknown[]).length > 0;
 }
 
 export async function listCustomers() {
