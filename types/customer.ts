@@ -9,11 +9,13 @@ export type Customer = {
   lineId: string | null;
   city: string | null;
   district: string | null;
+  jobType: string | null;
   incomeType: string | null;
   incomeAmount: number | null;
   incomeLabel: string | null;
   collateral: string | null;
   fundingNeed: string | null;
+  fundingPurpose: string | null;
   status: CustomerStatus;
   selfieUrl: string | null;
   idCardFrontUrl: string | null;
