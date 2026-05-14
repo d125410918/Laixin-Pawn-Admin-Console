@@ -6,6 +6,7 @@ export type Customer = {
   birthDate: string | null;
   nationalId: string | null;
   phone: string | null;
+  lineId: string | null;
   city: string | null;
   district: string | null;
   incomeType: string | null;
