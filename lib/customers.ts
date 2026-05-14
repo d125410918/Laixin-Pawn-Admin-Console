@@ -20,6 +20,10 @@ type CustomerRow = {
   updated_at: unknown;
 };
 
+type DeletedCustomerRow = {
+  id: unknown;
+};
+
 function stringOrNull(value: unknown) {
   if (value === null || value === undefined) {
     return null;
@@ -151,5 +155,6 @@ export async function deleteCustomer(id: string) {
     RETURNING id
   `;
 
-  return rows.length > 0;
+  const resultRows = rows as DeletedCustomerRow[];
+  return resultRows.length > 0;
 }
