@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import type { ReactNode } from "react";
 import type { Customer, CustomerStatus } from "@/types/customer";
 
 type CustomerListResponse = {
@@ -121,7 +122,11 @@ function formatIncome(customer: Customer) {
   return "-";
 }
 
-export default function AdminCustomerTable() {
+export default function AdminCustomerTable({
+  modeSwitch
+}: {
+  modeSwitch?: ReactNode;
+}) {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
   const [workingId, setWorkingId] = useState("");
@@ -284,14 +289,17 @@ export default function AdminCustomerTable() {
         <span>總筆數：{customers.length}</span>
         <span>未審核：{pendingCount}</span>
         <span>已審核：{approvedCount}</span>
-        <button
-          type="button"
-          className="refresh-button"
-          onClick={() => void loadCustomers()}
-          disabled={loading}
-        >
-          重新整理
-        </button>
+        <div className="summary-actions">
+          {modeSwitch}
+          <button
+            type="button"
+            className="refresh-button"
+            onClick={() => void loadCustomers()}
+            disabled={loading}
+          >
+            重新整理
+          </button>
+        </div>
       </div>
 
       {message ? <div className="error-box">{message}</div> : null}
