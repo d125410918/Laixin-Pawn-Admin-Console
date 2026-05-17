@@ -1,4 +1,4 @@
-import AdminCustomerTable from "@/components/AdminCustomerTable";
+import AdminModeSwitcher from "@/components/AdminModeSwitcher";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +15,7 @@ export default function HomePage() {
       </header>
 
       <section className="card">
-        <AdminCustomerTable />
+        <AdminModeSwitcher />
       </section>
     </main>
   );
