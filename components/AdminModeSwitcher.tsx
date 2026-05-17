@@ -75,72 +75,87 @@ export default function AdminModeSwitcher() {
     }
   }, [mode]);
 
-  return (
-    <div>
-      <div className="mode-switch-row">
-        <button
-          type="button"
-          className={`mode-switch-button ${mode === "customers" ? "mode-switch-button-active" : ""}`}
-          onClick={() => setMode("customers")}
-        >
-          客戶模式
-        </button>
+  const modeSwitch = (
+    <div className="mode-switch-inline">
+      <button
+        type="button"
+        className={`mode-switch-button ${mode === "customers" ? "mode-switch-button-active" : ""}`}
+        onClick={() => setMode("customers")}
+      >
+        客戶
+      </button>
 
-        <button
-          type="button"
-          className={`mode-switch-button ${mode === "referrers" ? "mode-switch-button-active" : ""}`}
-          onClick={() => setMode("referrers")}
-        >
-          介紹人模式
-        </button>
+      <button
+        type="button"
+        className={`mode-switch-button ${mode === "referrers" ? "mode-switch-button-active" : ""}`}
+        onClick={() => setMode("referrers")}
+      >
+        介紹人
+      </button>
+    </div>
+  );
+
+  return mode === "customers" ? (
+    <AdminCustomerTable modeSwitch={modeSwitch} />
+  ) : (
+    <div>
+      <div className="table-summary">
+        <span>總筆數：{referrers.length}</span>
+
+        <div className="summary-actions">
+          {modeSwitch}
+
+          <button
+            type="button"
+            className="refresh-button"
+            onClick={() => void loadReferrers()}
+            disabled={loading}
+          >
+            重新整理
+          </button>
+        </div>
       </div>
 
-      {mode === "customers" ? (
-        <AdminCustomerTable />
+      {message ? <div className="error-box">{message}</div> : null}
+
+      {loading ? (
+        <div className="loading-box">讀取中</div>
+      ) : referrers.length === 0 ? (
+        <div className="empty-box">目前沒有介紹人資料。</div>
       ) : (
-        <div>
-          {message ? <div className="error-box">{message}</div> : null}
+        <div className="table-scroll">
+          <table className="customer-table">
+            <thead>
+              <tr>
+                <th>姓名</th>
+                <th>手機號碼</th>
+                <th>身分證</th>
+                <th>建立時間</th>
+              </tr>
+            </thead>
 
-          {loading ? (
-            <div className="loading-box">讀取中</div>
-          ) : referrers.length === 0 ? (
-            <div className="empty-box">目前沒有介紹人資料。</div>
-          ) : (
-            <div className="table-scroll">
-              <table className="customer-table">
-                <thead>
-                  <tr>
-                    <th>姓名</th>
-                    <th>手機號碼</th>
-                    <th>身分證</th>
-                    <th>建立時間</th>
-                  </tr>
-                </thead>
+            <tbody>
+              {referrers.map((referrer) => (
+                <tr key={referrer.id}>
+                  <td>
+                    <span className="primary-text">{text(referrer.name)}</span>
+                  </td>
 
-                <tbody>
-                  {referrers.map((referrer) => (
-                    <tr key={referrer.id}>
-                      <td>
-                        <span className="primary-text">{text(referrer.name)}</span>
-                      </td>
+                  <td>
+                    <span className="primary-text">{text(referrer.phone)}</span>
+                  </td>
 
-                      <td>
-                        <span className="primary-text">{text(referrer.phone)}</span>
-                      </td>
+                  <td>
+                    <span className="primary-text">{text(referrer.identityNumber)}</span>
+                  </td>
 
-                      <td>
-                        <span className="primary-text">{text(referrer.identityNumber)}</span>
-                      </td>
-
-                      <td>
-                        <span className="primary-text">{formatDateTime(referrer.createdAt)}</span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  <td>
+                    <span className="primary-text">{formatDateTime(referrer.createdAt)}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
