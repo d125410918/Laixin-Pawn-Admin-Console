@@ -62,11 +62,10 @@ a {
   overflow: hidden;
 }
 
-.mode-switch-row {
+.mode-switch-inline {
   display: flex;
-  gap: 12px;
-  padding: 16px;
-  border-bottom: 1px solid #edf1f5;
+  align-items: center;
+  gap: 8px;
 }
 
 .mode-switch-button {
@@ -74,7 +73,7 @@ a {
   background: #ffffff;
   color: #344054;
   border-radius: 999px;
-  padding: 10px 16px;
+  padding: 7px 12px;
   cursor: pointer;
   font-weight: 700;
 }
@@ -95,8 +94,14 @@ a {
   font-size: 14px;
 }
 
-.refresh-button {
+.summary-actions {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.refresh-button {
   border: 1px solid #d0d5dd;
   border-radius: 999px;
   background: #ffffff;
@@ -238,11 +243,10 @@ a {
     flex-direction: column;
   }
 
-  .refresh-button {
+  .summary-actions {
     margin-left: 0;
-  }
-
-  .mode-switch-row {
-    flex-direction: column;
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
   }
 }
