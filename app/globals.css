@@ -62,6 +62,29 @@ a {
   overflow: hidden;
 }
 
+.mode-switch-row {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid #edf1f5;
+}
+
+.mode-switch-button {
+  border: 1px solid #d0d5dd;
+  background: #ffffff;
+  color: #344054;
+  border-radius: 999px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.mode-switch-button-active {
+  background: #101828;
+  border-color: #101828;
+  color: #ffffff;
+}
+
 .table-summary {
   display: flex;
   align-items: center;
@@ -217,5 +240,9 @@ a {
 
   .refresh-button {
     margin-left: 0;
+  }
+
+  .mode-switch-row {
+    flex-direction: column;
   }
 }
